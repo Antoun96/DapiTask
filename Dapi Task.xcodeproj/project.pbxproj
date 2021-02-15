@@ -14,6 +14,8 @@
 		B1B80A2F25DB07BC0031DFB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1B80A2E25DB07BC0031DFB9 /* Assets.xcassets */; };
 		B1B80A3225DB07BC0031DFB9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1B80A3025DB07BC0031DFB9 /* LaunchScreen.storyboard */; };
 		B1B80A3525DB07BC0031DFB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B80A3425DB07BC0031DFB9 /* main.m */; };
+		B1B80A4425DB0C640031DFB9 /* LinksTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B80A4225DB0C640031DFB9 /* LinksTableViewCell.m */; };
+		B1B80A4525DB0C640031DFB9 /* LinksTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1B80A4325DB0C640031DFB9 /* LinksTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,9 @@
 		B1B80A3125DB07BC0031DFB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B1B80A3325DB07BC0031DFB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1B80A3425DB07BC0031DFB9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B1B80A4125DB0C640031DFB9 /* LinksTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinksTableViewCell.h; sourceTree = "<group>"; };
+		B1B80A4225DB0C640031DFB9 /* LinksTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LinksTableViewCell.m; sourceTree = "<group>"; };
+		B1B80A4325DB0C640031DFB9 /* LinksTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LinksTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +66,7 @@
 		B1B80A2125DB07B70031DFB9 /* Dapi Task */ = {
 			isa = PBXGroup;
 			children = (
+				B1B80A4025DB0A7B0031DFB9 /* Cells */,
 				B1B80A2225DB07B70031DFB9 /* AppDelegate.h */,
 				B1B80A2325DB07B70031DFB9 /* AppDelegate.m */,
 				B1B80A2525DB07B70031DFB9 /* SceneDelegate.h */,
@@ -74,6 +80,16 @@
 				B1B80A3425DB07BC0031DFB9 /* main.m */,
 			);
 			path = "Dapi Task";
+			sourceTree = "<group>";
+		};
+		B1B80A4025DB0A7B0031DFB9 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B1B80A4125DB0C640031DFB9 /* LinksTableViewCell.h */,
+				B1B80A4225DB0C640031DFB9 /* LinksTableViewCell.m */,
+				B1B80A4325DB0C640031DFB9 /* LinksTableViewCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1B80A3225DB07BC0031DFB9 /* LaunchScreen.storyboard in Resources */,
+				B1B80A4525DB0C640031DFB9 /* LinksTableViewCell.xib in Resources */,
 				B1B80A2F25DB07BC0031DFB9 /* Assets.xcassets in Resources */,
 				B1B80A2D25DB07B80031DFB9 /* Main.storyboard in Resources */,
 			);
@@ -150,6 +167,7 @@
 				B1B80A2425DB07B70031DFB9 /* AppDelegate.m in Sources */,
 				B1B80A3525DB07BC0031DFB9 /* main.m in Sources */,
 				B1B80A2725DB07B70031DFB9 /* SceneDelegate.m in Sources */,
+				B1B80A4425DB0C640031DFB9 /* LinksTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

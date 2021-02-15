@@ -14,9 +14,41 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IDO-bi-lJH">
+                                <rect key="frame" x="340" y="54" width="54" height="28"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="5" maxX="10" maxY="5"/>
+                                <state key="normal" title="Start"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wa2-Tv-eXg">
+                                <rect key="frame" x="20" y="85" width="68.5" height="35"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="29"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TzI-k7-aGK">
+                                <rect key="frame" x="0.0" y="125" width="414" height="737"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="wa2-Tv-eXg" firstAttribute="top" secondItem="IDO-bi-lJH" secondAttribute="bottom" constant="3" id="3HY-eX-IuP"/>
+                            <constraint firstItem="wa2-Tv-eXg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Jcc-dF-RUb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="TzI-k7-aGK" secondAttribute="bottom" id="MiA-eu-rfj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TzI-k7-aGK" secondAttribute="trailing" id="N1y-xB-g6i"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="IDO-bi-lJH" secondAttribute="trailing" constant="20" id="bcK-0I-CIM"/>
+                            <constraint firstItem="IDO-bi-lJH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="fj6-LU-XuQ"/>
+                            <constraint firstItem="TzI-k7-aGK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="gl9-t5-yie"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="wa2-Tv-eXg" secondAttribute="trailing" id="kFo-d1-ddS"/>
+                            <constraint firstItem="TzI-k7-aGK" firstAttribute="top" secondItem="wa2-Tv-eXg" secondAttribute="bottom" constant="5" id="qzE-9M-Q4F"/>
+                            <constraint firstItem="IDO-bi-lJH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="wnv-2m-3Y1"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="tableViewSites" destination="TzI-k7-aGK" id="JY9-Qy-CBY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
