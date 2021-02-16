@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UILabel *labelSize;
 
+//@property(nonatomic, getter=isHidden) BOOL hidden;
+
 - (void)setDetails:(NSString*)title;
 
 @end

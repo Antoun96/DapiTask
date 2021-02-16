@@ -29,8 +29,7 @@ NSArray *tableData;
     [_tableViewSites registerNib:[UINib nibWithNibName:@"LinksTableViewCell" bundle:nil] forCellReuseIdentifier:@"LinksTableViewCell"];
     _tableViewSites.delegate = self;
     _tableViewSites.dataSource = self;
-    _tableViewSites.rowHeight = 70;
-    
+    _tableViewSites.rowHeight = 60;
     
 }- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
@@ -40,8 +39,22 @@ NSArray *tableData;
         cell = [[LinksTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LinksTableViewCell"];
     }
     
+    NSString *baseUrl = @"http://www.google.com/s2/favicons?domain=";
+    NSString *urlString = [baseUrl stringByAppendingString:tableData[indexPath.row]];
+    NSURL *myURL=[NSURL URLWithString: urlString];
+    NSData *myData=[NSData dataWithContentsOfURL:myURL];
+
+    UIImage *myImage=[[UIImage alloc] initWithData:myData];
+    
+//    [self getContentLength:^(long long returnValue) {
+//         NSLog(@"your content length : %lld",returnValue);
+//    } url:tableData[indexPath.row]];
+    
     [cell setDetails:[tableData objectAtIndex:indexPath.row]];
-//    cell.textLabel.text = [tableData objectAtIndex:indexPath.row];
+    
+    cell.imageViewLogo.image = myImage;
+    cell.imageViewLogo.superview.hidden = NO ;
+    
     return cell;
     
 }
@@ -52,6 +65,7 @@ NSArray *tableData;
     
 }
 
+//init table array
 - (void) initArray{
     tableData = [NSArray arrayWithObjects:@"apple.com",
                  @"spacex.com",
@@ -62,6 +76,33 @@ NSArray *tableData;
                  @"boomsupersonic.com",
                  @"twitter.com",
                  nil];
+}
+
+- (void) getContentLength : (void(^)(long long returnValue))completionHandler url:(NSString*) url {
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSString *fullurl = @"https://www.";
+    fullurl = [fullurl stringByAppendingString:url];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:fullurl]];
+    request.HTTPMethod = @"HEAD";
+    [request addValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
+    
+    NSURLSessionDownloadTask *uploadTask
+    = [session downloadTaskWithRequest:request
+                     completionHandler:^(NSURL *url,NSURLResponse *response,NSError *error) {
+        
+        NSLog(@"handler size: %lld", response.expectedContentLength);
+        long totalContentFileLength = [[NSNumber alloc] initWithFloat:response.expectedContentLength].longLongValue;
+       
+        NSLog(@"content length=%ld", totalContentFileLength);
+        completionHandler(totalContentFileLength);
+        
+    }];
+    [uploadTask resume];
+    
 }
 
 @end
