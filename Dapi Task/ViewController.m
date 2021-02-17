@@ -94,6 +94,12 @@ int linkIndex = 0;
         
         NSLog(@"handler size: %lld", response.expectedContentLength);
         long totalContentFileLength = [[NSNumber alloc] initWithFloat:response.expectedContentLength].longLongValue;
+        
+        if (totalContentFileLength == -1){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+            NSLog(@"response status code: %ld", (long)[httpResponse statusCode]);
+            totalContentFileLength = httpResponse.statusCode;
+        }
        
         NSLog(@"content length=%ld", totalContentFileLength);
         completionHandler(totalContentFileLength);
