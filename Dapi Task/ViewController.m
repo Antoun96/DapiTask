@@ -23,6 +23,8 @@
 
 NSArray *tableData;
 
+int linkIndex = 0;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -84,6 +86,8 @@ NSArray *tableData;
     request.HTTPMethod = @"HEAD";
     [request addValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
     
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
     NSURLSessionDownloadTask *uploadTask
     = [session downloadTaskWithRequest:request
                      completionHandler:^(NSURL *url,NSURLResponse *response,NSError *error) {
@@ -94,17 +98,24 @@ NSArray *tableData;
         NSLog(@"content length=%ld", totalContentFileLength);
         completionHandler(totalContentFileLength);
         
+        dispatch_semaphore_signal(sem);
     }];
     [uploadTask resume];
     
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 }
 - (IBAction)actionStart:(id)sender {
     
     _buttonStart.hidden = YES;
     
+    [self loadInBackground];
+}
+
+-(void)loadInBackground{
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         //Background Thread
-        [self startLoadingImageAndContent:0];
+        [self startLoadingImageAndContent:linkIndex];
     });
 }
 
@@ -117,6 +128,10 @@ NSArray *tableData;
         NSLog(@"loadimage: %d", index);
         NSData *imageData = [self showImage:index];
         
+        [self getContentLength:^(long long returnValue) {
+            NSLog(@"your content length : %lld",returnValue);
+        } url:tableData[index]];
+        
         dispatch_sync(dispatch_get_main_queue(), ^(void){
             
             NSLog(@"show: %d", index);
@@ -127,9 +142,11 @@ NSArray *tableData;
         });
     });
     
-    if (index < [tableData count]-1){
+    if (linkIndex < [tableData count]-1){
         
-        [self startLoadingImageAndContent:index+=1];
+        linkIndex+=1;
+        [self loadInBackground];
+        NSLog(@"loop: %d",linkIndex);
     }
 }
 
@@ -137,12 +154,12 @@ NSArray *tableData;
     
     NSString *baseUrl = @"http://www.google.com/s2/favicons?domain=";
     NSString *urlString = [baseUrl stringByAppendingString:tableData[index]];
-    NSURL *myURL=[NSURL URLWithString: urlString];
-    NSData *myData=[NSData dataWithContentsOfURL:myURL];
+    NSURL *imageUrl=[NSURL URLWithString: urlString];
+    NSData *data=[NSData dataWithContentsOfURL:imageUrl];
     
     NSLog(@"fetch: %d", index);
     
-    return myData;
+    return data;
 }
 
 @end
