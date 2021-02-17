@@ -74,7 +74,7 @@ int linkIndex = 0;
                  nil];
 }
 
-- (void) getContentLength : (void(^)(long long returnValue))completionHandler url:(NSString*) url {
+- (void) getContentLength : (void(^)(NSString* returnValue))completionHandler url:(NSString*) url {
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
@@ -99,10 +99,12 @@ int linkIndex = 0;
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
             NSLog(@"response status code: %ld", (long)[httpResponse statusCode]);
             totalContentFileLength = httpResponse.statusCode;
+            
+            completionHandler([NSString stringWithFormat:@"%ld", totalContentFileLength]);
+        }else{
+         
+            completionHandler([self changeBytesToPrintableValues:totalContentFileLength]);
         }
-       
-        NSLog(@"content length=%ld", totalContentFileLength);
-        completionHandler(totalContentFileLength);
         
         dispatch_semaphore_signal(sem);
     }];
@@ -134,8 +136,11 @@ int linkIndex = 0;
         NSLog(@"loadimage: %d", index);
         NSData *imageData = [self showImage:index];
         
-        [self getContentLength:^(long long returnValue) {
-            NSLog(@"your content length : %lld",returnValue);
+        __block NSString *formatedContentLength = @"";
+        
+        [self getContentLength:^(NSString* returnValue) {
+            NSLog(@"your content length : %@",returnValue);
+             formatedContentLength = returnValue;
         } url:tableData[index]];
         
         dispatch_sync(dispatch_get_main_queue(), ^(void){
@@ -145,6 +150,9 @@ int linkIndex = 0;
             
             cell.imageViewLogo.image = [[UIImage alloc] initWithData:imageData];
             cell.imageViewLogo.superview.hidden = NO ;
+            
+            cell.labelSize.hidden = NO;
+            cell.labelSize.text = formatedContentLength;
         });
     });
     
@@ -166,6 +174,23 @@ int linkIndex = 0;
     NSLog(@"fetch: %d", index);
     
     return data;
+}
+
+-(NSString*)changeBytesToPrintableValues:(long long) size{
+    
+    size = size/1024;
+    
+    if (size < 1000){
+        
+        return [NSString stringWithFormat:@"%lld KB", size];
+    
+    }else if (size >= 1000){
+        
+        size = size/1024;
+        
+        return [NSString stringWithFormat:@"%lld MB", size];
+    }
+    return @"";
 }
 
 @end
