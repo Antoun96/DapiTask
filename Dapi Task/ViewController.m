@@ -13,6 +13,8 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableViewSites;
 
+@property (weak, nonatomic) IBOutlet UIButton *buttonStart;
+
 @property NSArray *myArray;
 
 @end
@@ -39,21 +41,13 @@ NSArray *tableData;
         cell = [[LinksTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LinksTableViewCell"];
     }
     
-    NSString *baseUrl = @"http://www.google.com/s2/favicons?domain=";
-    NSString *urlString = [baseUrl stringByAppendingString:tableData[indexPath.row]];
-    NSURL *myURL=[NSURL URLWithString: urlString];
-    NSData *myData=[NSData dataWithContentsOfURL:myURL];
-
-    UIImage *myImage=[[UIImage alloc] initWithData:myData];
-    
 //    [self getContentLength:^(long long returnValue) {
 //         NSLog(@"your content length : %lld",returnValue);
 //    } url:tableData[indexPath.row]];
     
     [cell setDetails:[tableData objectAtIndex:indexPath.row]];
     
-    cell.imageViewLogo.image = myImage;
-    cell.imageViewLogo.superview.hidden = NO ;
+//    cell.imageViewLogo.image = myImage;
     
     return cell;
     
@@ -103,6 +97,52 @@ NSArray *tableData;
     }];
     [uploadTask resume];
     
+}
+- (IBAction)actionStart:(id)sender {
+    
+    _buttonStart.hidden = YES;
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        //Background Thread
+        [self startLoadingImageAndContent:0];
+    });
+}
+
+-(void)startLoadingImageAndContent:(int) index{
+    
+    dispatch_queue_t serialQueue = dispatch_queue_create("com.dapi.queue", DISPATCH_QUEUE_SERIAL);
+
+    dispatch_sync(serialQueue, ^{
+        
+        NSLog(@"loadimage: %d", index);
+        NSData *imageData = [self showImage:index];
+        
+        dispatch_sync(dispatch_get_main_queue(), ^(void){
+            
+            NSLog(@"show: %d", index);
+            LinksTableViewCell *cell = [self->_tableViewSites cellForRowAtIndexPath: [NSIndexPath indexPathForRow:index inSection:0]];
+            
+            cell.imageViewLogo.image = [[UIImage alloc] initWithData:imageData];
+            cell.imageViewLogo.superview.hidden = NO ;
+        });
+    });
+    
+    if (index < [tableData count]-1){
+        
+        [self startLoadingImageAndContent:index+=1];
+    }
+}
+
+-(NSData*)showImage:(int) index{
+    
+    NSString *baseUrl = @"http://www.google.com/s2/favicons?domain=";
+    NSString *urlString = [baseUrl stringByAppendingString:tableData[index]];
+    NSURL *myURL=[NSURL URLWithString: urlString];
+    NSData *myData=[NSData dataWithContentsOfURL:myURL];
+    
+    NSLog(@"fetch: %d", index);
+    
+    return myData;
 }
 
 @end
