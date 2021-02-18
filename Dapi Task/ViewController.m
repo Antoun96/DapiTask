@@ -23,8 +23,6 @@
 
 NSArray *tableData;
 
-int linkIndex = 0;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -123,7 +121,7 @@ int linkIndex = 0;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         //Background Thread
-        [self startLoadingImageAndContent:linkIndex];
+        [self startLoadingImageAndContent:0];
     });
 }
 
@@ -156,11 +154,11 @@ int linkIndex = 0;
         });
     });
     
-    if (linkIndex < [tableData count]-1){
+    index += 1;
+    if (index < tableData.count){
         
-        linkIndex+=1;
-        [self loadInBackground];
-        NSLog(@"loop: %d",linkIndex);
+        [self startLoadingImageAndContent: index];
+        NSLog(@"loop: %d",index);
     }
 }
 
