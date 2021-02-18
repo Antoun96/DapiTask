@@ -23,8 +23,12 @@
 
 NSArray *tableData;
 
+dispatch_queue_t serialQueue;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    serialQueue = dispatch_queue_create("com.dapi.queue", DISPATCH_QUEUE_SERIAL);
     
     [self initArray];
     
@@ -41,13 +45,7 @@ NSArray *tableData;
         cell = [[LinksTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LinksTableViewCell"];
     }
     
-//    [self getContentLength:^(long long returnValue) {
-//         NSLog(@"your content length : %lld",returnValue);
-//    } url:tableData[indexPath.row]];
-    
     [cell setDetails:[tableData objectAtIndex:indexPath.row]];
-    
-//    cell.imageViewLogo.image = myImage;
     
     return cell;
     
@@ -127,8 +125,6 @@ NSArray *tableData;
 
 -(void)startLoadingImageAndContent:(int) index{
     
-    dispatch_queue_t serialQueue = dispatch_queue_create("com.dapi.queue", DISPATCH_QUEUE_SERIAL);
-
     dispatch_sync(serialQueue, ^{
         
         NSLog(@"loadimage: %d", index);
@@ -176,17 +172,17 @@ NSArray *tableData;
 
 -(NSString*)changeBytesToPrintableValues:(long long) size{
     
-    size = size/1024;
+    float sizeFormatted = (float) size/1024;
     
-    if (size < 1000){
+    if (sizeFormatted < 1000){
         
-        return [NSString stringWithFormat:@"%lld KB", size];
+        return [NSString stringWithFormat:@"%.02f KB", sizeFormatted];
     
-    }else if (size >= 1000){
+    }else if (sizeFormatted >= 1000){
         
-        size = size/1024;
+        sizeFormatted = (float) size/1024;
         
-        return [NSString stringWithFormat:@"%lld MB", size];
+        return [NSString stringWithFormat:@"%.02f MB", sizeFormatted];
     }
     return @"";
 }
