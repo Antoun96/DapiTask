@@ -57,6 +57,33 @@ dispatch_queue_t serialQueue;
     
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    return @"CONTENTS";
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 40;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section{
+    
+    // Background color
+    view.tintColor = [UIColor colorWithRed:((float)((0xF20000) >> 16))/255.0 \
+                                     green:((float)((0x00F200) >>  8))/255.0 \
+                                      blue:((float)((0x0000F7) >>  0))/255.0 \
+                                     alpha:1.0];
+    
+    // Text Color
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[UIColor colorWithRed:((float)((0xa20000) >> 16))/255.0 \
+                                                   green:((float)((0x00a200) >>  8))/255.0 \
+                                                    blue:((float)((0x0000a8) >>  0))/255.0 \
+                                                   alpha:1.0]];
+    
+//    Text Size
+    header.textLabel.font = [UIFont boldSystemFontOfSize:12];
+}
+
 //init table array
 - (void) initArray{
     tableData = [NSArray arrayWithObjects:@"apple.com",
@@ -84,7 +111,7 @@ dispatch_queue_t serialQueue;
     
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     
-    NSURLSessionDownloadTask *uploadTask
+    NSURLSessionDownloadTask *downloadTask
     = [session downloadTaskWithRequest:request
                      completionHandler:^(NSURL *url,NSURLResponse *response,NSError *error) {
         
@@ -104,7 +131,7 @@ dispatch_queue_t serialQueue;
         
         dispatch_semaphore_signal(sem);
     }];
-    [uploadTask resume];
+    [downloadTask resume];
     
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 }
@@ -112,20 +139,12 @@ dispatch_queue_t serialQueue;
     
     _buttonStart.hidden = YES;
     
-    [self loadInBackground];
-}
-
--(void)loadInBackground{
-    
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
-        [self startLoadingImageAndContent:0];
-    });
+    [self startLoadingImageAndContent:0];
 }
 
 -(void)startLoadingImageAndContent:(int) index{
     
-    dispatch_sync(serialQueue, ^{
+    dispatch_async(serialQueue, ^{
         
         NSLog(@"loadimage: %d", index);
         NSData *imageData = [self showImage:index];
@@ -153,8 +172,8 @@ dispatch_queue_t serialQueue;
     index += 1;
     if (index < tableData.count){
         
-        [self startLoadingImageAndContent: index];
         NSLog(@"loop: %d",index);
+        [self startLoadingImageAndContent: index];
     }
 }
 
